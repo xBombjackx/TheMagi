@@ -1,14 +1,13 @@
-import { Pool } from 'pg';
-import dotenv from 'dotenv';
+import { Database } from './db/database';
+import { PostgresDatabase } from './db/postgres';
+import { SqliteDatabase } from './db/sqlite';
 
-dotenv.config();
+let db: Database;
 
-const pool = new Pool({
-  user: process.env.DB_USER,
-  host: process.env.DB_HOST,
-  database: process.env.DB_DATABASE,
-  password: process.env.DB_PASSWORD,
-  port: parseInt(process.env.DB_PORT || '5432'),
-});
+if (process.env.NODE_ENV === 'production') {
+  db = new PostgresDatabase();
+} else {
+  db = new SqliteDatabase();
+}
 
-export default pool;
+export default db;
